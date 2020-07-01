@@ -33,7 +33,7 @@ namespace Quantum.Kata.BasicGates {
     //////////////////////////////////////////////////////////////////
 
     // Note that all operations in this section have `is Adj+Ctl` in their signature.
-    // This means that they should be implemented in a way that allows Q# 
+    // This means that they should be implemented in a way that allows Q#
     // to compute their adjoint and controlled variants automatically.
     // Since each task is solved using only intrinsic gates, you should not need to put any special effort in this.
 
@@ -50,7 +50,7 @@ namespace Quantum.Kata.BasicGates {
         // The Pauli X gate will change the |0⟩ state to the |1⟩ state and vice versa.
         // Type X(q);
         // Then rebuild the project and rerun the tests - T11_StateFlip_Test should now pass!
-
+        X(q);
         // ...
     }
 
@@ -64,7 +64,7 @@ namespace Quantum.Kata.BasicGates {
     // Note:  |+⟩ and |-⟩ form a different basis for single-qubit states, called X basis.
     // |0⟩ and |1⟩ are called Z basis.
     operation BasisChange (q : Qubit) : Unit is Adj+Ctl {
-        // ...
+        H(q);
     }
 
 
@@ -72,7 +72,7 @@ namespace Quantum.Kata.BasicGates {
     // Input: A qubit in state |ψ⟩ = α |0⟩ + β |1⟩.
     // Goal:  Change the qubit state to α |0⟩ - β |1⟩ (flip the sign of |1⟩ component of the superposition).
     operation SignFlip (q : Qubit) : Unit is Adj+Ctl {
-        // ...
+        Z(q);
     }
 
 
@@ -84,10 +84,10 @@ namespace Quantum.Kata.BasicGates {
     //        If the qubit is in state |0⟩, change its state to cos(alpha)*|0⟩ + sin(alpha)*|1⟩.
     //        If the qubit is in state |1⟩, change its state to -sin(alpha)*|0⟩ + cos(alpha)*|1⟩.
     //        If the qubit is in superposition, change its state according to the effect on basis vectors.
-    // This is the first operation in this kata that is not self-adjoint, 
-    // i.e., applying it for a second time does not return the qubit to the original state. 
+    // This is the first operation in this kata that is not self-adjoint,
+    // i.e., applying it for a second time does not return the qubit to the original state.
     operation AmplitudeChange (alpha : Double, q : Qubit) : Unit is Adj+Ctl {
-        // ...
+        Ry(alpha * 2.0, q);
     }
 
 
@@ -95,7 +95,7 @@ namespace Quantum.Kata.BasicGates {
     // Input: A qubit in state |ψ⟩ = α |0⟩ + β |1⟩.
     // Goal:  Change the qubit state to α |0⟩ + iβ |1⟩ (flip the phase of |1⟩ component of the superposition).
     operation PhaseFlip (q : Qubit) : Unit is Adj+Ctl {
-        // ...
+        S(q);
     }
 
 
@@ -108,23 +108,23 @@ namespace Quantum.Kata.BasicGates {
     //        If the qubit is in state |1⟩, change its state to exp(i*alpha)|1⟩.
     //        If the qubit is in superposition, change its state according to the effect on basis vectors.
     operation PhaseChange (alpha : Double, q : Qubit) : Unit is Adj+Ctl {
-        // ...
+        R1(alpha, q);
     }
 
     // Task 1.7. Global phase change
     // Input: A qubit in state β|0⟩ + γ|1⟩.
     // Goal: Change the state of the qubit to - β|0⟩ - γ|1⟩.
     //
-    // Note: This change on its own is not observable - 
-    // there is no experiment you can do on a standalone qubit 
-    // to figure out whether it acquired the global phase or not. 
-    // However, you can use a controlled version of this operation 
-    // to observe the global phase it introduces. This is used 
+    // Note: This change on its own is not observable -
+    // there is no experiment you can do on a standalone qubit
+    // to figure out whether it acquired the global phase or not.
+    // However, you can use a controlled version of this operation
+    // to observe the global phase it introduces. This is used
     // in later katas as part of more complicated tasks.
     operation GlobalPhaseChange (q: Qubit) : Unit is Adj+Ctl {
         // Hint: Can you apply one of the rotation gates?
         // Take a look at the functions in the Microsoft.Quantum.Math package to use a common mathematical constant.
-        // ...
+        R(PauliI, 2.0*PI(), q);
     }
 
 
@@ -132,7 +132,7 @@ namespace Quantum.Kata.BasicGates {
     // Input: Two entangled qubits in Bell state |Φ⁺⟩ = (|00⟩ + |11⟩) / sqrt(2).
     // Goal:  Change the two-qubit state to |Φ⁻⟩ = (|00⟩ - |11⟩) / sqrt(2).
     operation BellStateChange1 (qs : Qubit[]) : Unit is Adj+Ctl {
-        // ...
+        Z(qs[0]);
     }
 
 
@@ -140,7 +140,7 @@ namespace Quantum.Kata.BasicGates {
     // Input: Two entangled qubits in Bell state |Φ⁺⟩ = (|00⟩ + |11⟩) / sqrt(2).
     // Goal:  Change the two-qubit state to |Ψ⁺⟩ = (|01⟩ + |10⟩) / sqrt(2).
     operation BellStateChange2 (qs : Qubit[]) : Unit is Adj+Ctl {
-        // ...
+        X(qs[1]);
     }
 
 
@@ -148,16 +148,17 @@ namespace Quantum.Kata.BasicGates {
     // Input: Two entangled qubits in Bell state |Φ⁺⟩ = (|00⟩ + |11⟩) / sqrt(2).
     // Goal:  Change the two-qubit state to |Ψ⁻⟩ = (|01⟩ - |10⟩) / sqrt(2).
     operation BellStateChange3 (qs : Qubit[]) : Unit is Adj+Ctl {
-        // ...
+        Z(qs[0]);
+        X(qs[1]);
     }
 
 
     //////////////////////////////////////////////////////////////////
     // Part II. Multi-Qubit Gates
     //////////////////////////////////////////////////////////////////
-    // In the following tasks the order of qubit states in task description matches the order of qubits in the array 
+    // In the following tasks the order of qubit states in task description matches the order of qubits in the array
     // (i.e.,  |10⟩  state corresponds to qs[0] in state |1⟩ and qs[1] in state |0⟩).
-    // Note also that the states shown in test output use little-endian notation (similarly to DumpMachine), 
+    // Note also that the states shown in test output use little-endian notation (similarly to DumpMachine),
     // see tutorial MultiQubitGates, for a refresher on endianness.
     // Task 2.1. Two-qubit gate - 1
     // Input: Two unentangled qubits (stored in an array of length 2).
